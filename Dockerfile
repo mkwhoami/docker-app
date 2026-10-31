@@ -13,6 +13,15 @@ WORKDIR /home/app
 # will execute npm install in /home/app because of WORKDIR
 RUN npm install
 
+# create group and user to run the app
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# set ownership and permissions for the app directory
+RUN chown -R appuser:appgroup /home/app && chmod -R 755 /home/app
+
+# switch to the new user
+USER appuser
+
 # no need for /home/app/server.js because of WORKDIR
 CMD ["node", "server.js"]
 
